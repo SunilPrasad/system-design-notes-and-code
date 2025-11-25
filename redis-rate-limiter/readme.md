@@ -26,5 +26,33 @@ For each new request, you look back over the last X seconds (your rate limit win
 You count how many timestamps fall inside that window.
 
 If the count is below the allowed limit → allow the request
+
 If it has reached the limit → block the request
 
+local key = KEYS[1]
+local limit = tonumber(ARGV[1])
+local window = tonumber(ARGV[2])
+local current_time_ms = tonumber(ARGV[3])
+
+-- 1. Calculate the start of the sliding window
+local trim_score = current_time_ms - (window * 1000)
+
+-- 2. Trim: Remove all requests older than the window start time
+redis.call('ZREMRANGEBYSCORE', key, 0, trim_score)
+
+-- 3. Count: Get the current number of requests in the window
+local request_count = redis.call('ZCARD', key)
+
+-- 4. Check & Record
+if request_count < limit then
+    -- Allowed: Add the current request timestamp to the ZSET
+    redis.call('ZADD', key, current_time_ms, current_time_ms)
+
+    -- Set Expiration (TTL)
+    redis.call('EXPIRE', key, window + 1)
+    
+    return 1
+else
+    -- Denied
+    return 0
+end
