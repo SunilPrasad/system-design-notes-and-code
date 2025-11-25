@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "redis-rate-limiter", "redis-rate-limiter", "{CAA519F0-1652-5D18-FD31-4CA67A151D55}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "code", "code", "{BBC15A62-EFE6-2BE6-48F7-99295BF24936}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistributedRateLimiterApi", "redis-rate-limiter\code\DistributedRateLimiterApi\DistributedRateLimiterApi.csproj", "{79F95410-05DF-434B-9F01-B318A445DE4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79F95410-05DF-434B-9F01-B318A445DE4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79F95410-05DF-434B-9F01-B318A445DE4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79F95410-05DF-434B-9F01-B318A445DE4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79F95410-05DF-434B-9F01-B318A445DE4C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BBC15A62-EFE6-2BE6-48F7-99295BF24936} = {CAA519F0-1652-5D18-FD31-4CA67A151D55}
+		{79F95410-05DF-434B-9F01-B318A445DE4C} = {BBC15A62-EFE6-2BE6-48F7-99295BF24936}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50EE0708-C654-44F8-B880-ACA302C2FFB0}
+	EndGlobalSection
+EndGlobal
