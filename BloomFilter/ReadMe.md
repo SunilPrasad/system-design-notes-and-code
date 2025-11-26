@@ -38,3 +38,32 @@ How it Works (The Math)
   - Check the bits at the resulting indices.
   - If any bit is 0: The item is definitely not there.
   = If all bits are 1: The item is probably there (it could be a collision where other items happened to set those same bits).
+
+
+## 📐 Optimal Size Calculation
+
+To determine the most efficient size for the Bloom Filter, we don't guess. We calculate the exact size required to minimize memory usage while adhering to a specific **False Positive Rate**.
+
+### 1. The Inputs
+To calculate the size, you need two values:
+* **`n`**: The number of items you expect to store (e.g., `1,000,000`).
+* **`p`**: The acceptable error rate (e.g., `0.01` for 1%).
+
+### 2. The Formula
+The standard formula to calculate the BitArray size (`m`) is:
+
+```math
+m = - (n * ln(p)) / (ln(2)^2)
+
+Example Scenario
+
+Let's calculate the size required to store 1 Million Usernames with a 1% chance of error
+n = 1,000,000
+p = 0.01
+
+The Math:
+ln(0.01) $\approx$ -4.605
+-(1,000,000 * -4.605) = 4,605,170
+4,605,170 / 0.48045 = 9,585,058 bits
+
+The Result:Bits: ~9.6 Million bitsMemory: ~1.14 MB
