@@ -74,3 +74,50 @@ The Math:
 The Result:Bits: ~9.6 Million bits
 
 Memory: ~1.14 MB
+
+## 🔢 Optimal Hash Count (k)
+
+You might wonder: *"Why do we use 7 hash functions? Why not just 1 or 100?"*
+
+The number of hash functions ($k$) is not random. It is calculated to minimize the error rate for a specific array size.
+
+### 1. The Logic (The "Goldilocks" Rule)
+* **Too Few Hashes ($k=1$):** Not enough differentiation. Items collide too easily.
+* **Too Many Hashes ($k=100$):** You set too many bits to `1` for every item. The array fills up instantly, causing errors.
+* **The Sweet Spot:** The math proves that the filter is most efficient when the bit array is exactly **50% full**. To achieve this, we must calculate the specific number of hashes.
+
+### 2. The Formula
+The optimal number of hash functions is roughly **70% of the bits-per-item**.
+
+```math
+
+k = (m / n) * ln(2)
+
+```
+
+## 🧮 The Math: Double Hashing Strategy
+
+To generate `k` positions for an item, this implementation uses the **Kirsch-Mitzenmacher Optimization** (2006).
+
+Instead of computing `k` expensive hash functions (like MD5 or SHA) separately, we compute two 32-bit hash values ($h_1$ and $h_2$) and generate the remaining positions using this linear formula:
+
+```csharp
+index = (h1 + i * h2) % m
+
+```
+
+## 🔐 Hashing Algorithm: FNV-1a
+
+This implementation uses the **Fowler–Noll–Vo (FNV-1a)** hash algorithm rather than the default `.GetHashCode()`.
+
+### Why FNV-1a?
+1.  **Speed:** It uses only XOR and Multiplication operations, making it extremely fast for high-performance loops.
+2.  **Distribution:** It has excellent avalanche properties (small changes in input result in massive changes in the hash).
+3.  **Stability:** Unlike `.GetHashCode()`, FNV-1a is deterministic. The same string always results in the same hash, regardless of the .NET version or server uptime.
+
+### The Constants
+The code uses standard 32-bit FNV constants:
+* **Prime:** `16777619`
+* **Offset Basis:** `2166136261`
+
+To achieve **Double Hashing**, we run the algorithm twice with different initial seeds (the standard Offset Basis for Hash A, and a custom seed for Hash B) to generate two independent hash values.
