@@ -61,12 +61,16 @@ m = - (n * ln(p)) / (ln(2)^2)
 ***Example Scenario***
 
 Let's calculate the size required to store 1 Million Usernames with a 1% chance of error
-n = 1,000,000
-p = 0.01
+
+- n = 1,000,000
+- p = 0.01
 
 The Math:
-ln(0.01) $\approx$ -4.605
--(1,000,000 * -4.605) = 4,605,170
-4,605,170 / 0.48045 = 9,585,058 bits
 
-The Result:Bits: ~9.6 Million bitsMemory: ~1.14 MB
+- ln(0.01) $\approx$ -4.605
+- -(1,000,000 * -4.605) = 4,605,170
+- 4,605,170 / 0.48045 = 9,585,058 bits
+
+The Result:Bits: ~9.6 Million bits
+
+Memory: ~1.14 MB
