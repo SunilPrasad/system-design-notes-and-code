@@ -53,9 +53,12 @@ To calculate the size, you need two values:
 The standard formula to calculate the BitArray size (`m`) is:
 
 ```math
+
 m = - (n * ln(p)) / (ln(2)^2)
 
-Example Scenario
+```
+
+***Example Scenario***
 
 Let's calculate the size required to store 1 Million Usernames with a 1% chance of error
 n = 1,000,000
