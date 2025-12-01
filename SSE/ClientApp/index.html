@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SSE Stock Dashboard</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .up {
+      color: green;
+      font-weight: bold;
+    }
+
+    .down {
+      color: red;
+      font-weight: bold;
+    }
+
+    .flash-up {
+      background: rgba(0, 255, 0, 0.2);
+      transition: background 0.5s ease-out;
+    }
+
+    .flash-down {
+      background: rgba(255, 0, 0, 0.2);
+      transition: background 0.5s ease-out;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Live Stock Prices (SSE Example)</h2>
+
+  <table id="stocksTable">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Change</th>
+        <th>% Change</th>
+        <th>Last Updated</th>
+      </tr>
+    </thead>
+    <tbody id="stocksBody"></tbody>
+  </table>
+
+  <script>
+    const stocksBody = document.getElementById("stocksBody");
+    const apiUrl = "http://localhost:5100/stocks/stream";
+
+    let previousPrices = {}; // to detect up/down
+
+    const es = new EventSource(apiUrl);
+
+    es.onmessage = (event) => {
+      const stocks = JSON.parse(event.data);
+
+      // Clear table
+      stocksBody.innerHTML = "";
+
+      stocks.forEach(stock => {
+
+        const previousPrice = previousPrices[stock.symbol] ?? stock.price;
+        const isUp = stock.price > previousPrice;
+        const isDown = stock.price < previousPrice;
+
+        // Save latest price
+        previousPrices[stock.symbol] = stock.price;
+
+        // Calculate change
+        const diff = (stock.price - stock.previousPrice).toFixed(2);
+        const pct = ((stock.price - stock.previousPrice) / stock.previousPrice * 100).toFixed(2);
+
+        // Create row
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${stock.symbol}</td>
+          <td>${stock.name}</td>
+          <td>${stock.price}</td>
+          <td class="${isUp ? 'up' : isDown ? 'down' : ''}">${diff}</td>
+          <td class="${isUp ? 'up' : isDown ? 'down' : ''}">${pct}%</td>
+          <td>${new Date(stock.lastUpdatedUtc).toLocaleTimeString()}</td>
+        `;
+
+        // Flash effect
+        if (isUp) tr.classList.add("flash-up");
+        if (isDown) tr.classList.add("flash-down");
+
+        setTimeout(() => {
+          tr.classList.remove("flash-up");
+          tr.classList.remove("flash-down");
+        }, 500);
+
+        stocksBody.appendChild(tr);
+      });
+    };
+
+    es.onerror = (err) => {
+      console.error("SSE error:", err);
+    };
+  </script>
+
+</body>
+</html>
