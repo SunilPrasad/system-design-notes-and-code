@@ -1,0 +1,52 @@
+<div class="container">
+
+  @if (wsService.status() === 'Disconnected') {
+    
+    <div class="login-box">
+      <h2>WebSocket Login</h2>
+      <input 
+        [ngModel]="myUserId()" 
+        (ngModelChange)="myUserId.set($event)" 
+        placeholder="Username (e.g. Alice)" 
+      />
+      <button (click)="login()">Connect</button>
+    </div>
+
+  } @else {
+
+    <div class="chat-box">
+      <h3>Status: <strong>{{ wsService.status() }}</strong></h3>
+      <small>Total Messages: {{ wsService.messageCount() }}</small>
+
+      <div class="history">
+        @for (msg of wsService.messages(); track $index) {
+          <div class="msg-item">
+            {{ msg }}
+          </div>
+        } @empty {
+          <div class="no-messages">No messages yet...</div>
+        }
+      </div>
+
+      <div class="controls">
+        <input 
+          [ngModel]="targetUser()" 
+          (ngModelChange)="targetUser.set($event)" 
+          placeholder="To (e.g. Bob)" 
+          class="input-target" 
+        />
+        
+        <input 
+          [ngModel]="messageText()" 
+          (ngModelChange)="messageText.set($event)"
+          (keyup.enter)="sendMessage()"
+          placeholder="Message..." 
+          class="input-msg" 
+        />
+        
+        <button (click)="sendMessage()">Send</button>
+      </div>
+    </div>
+
+  }
+</div>

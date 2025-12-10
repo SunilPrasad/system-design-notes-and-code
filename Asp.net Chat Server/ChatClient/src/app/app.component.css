@@ -1,0 +1,48 @@
+.container {
+    font-family: sans-serif;
+    max-width: 600px;
+    margin: 2rem auto;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.login-box {
+    text-align: center;
+}
+
+.history {
+    background: #f9f9f9;
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.msg-item {
+    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+.input-target {
+    width: 30%;
+}
+
+.input-msg {
+    flex-grow: 1;
+}
+
+button {
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
