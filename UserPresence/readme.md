@@ -195,4 +195,4 @@ This architecture powers the "Green Dot" for the world's largest apps, ensuring 
 -----
 
 **Next Steps:**
-Once you have this running, the next challenge is **Fan-Out**. When Justin Bieber goes offline, how do you notify 100 million followers without crashing the server? (Hint: You don't notify everyone). We will cover that in our next post on **"Scalable Group Chat Architecture."**
+The next challenge is **Fan-Out**. When Justin Bieber goes offline, how do you notify 100 million followers without crashing the server? (Hint: You don't notify everyone). We will cover that in our next post on **"Scalable Group Chat Architecture."**
