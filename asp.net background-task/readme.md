@@ -1,9 +1,3 @@
-Here is a clean, **generic architectural document**. You can add this to your project documentation (Wiki/Readme) to explain the pattern to other developers.
-
-It starts with the **Problem Statement**, explains the **Generic Pattern**, and then provides the **Email Service** as the concrete implementation example.
-
----
-
 # Architecture Pattern: Asynchronous Background Processing
 
 ## 1. Problem Statement
