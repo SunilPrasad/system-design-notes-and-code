@@ -148,47 +148,7 @@ Layered idempotency is safer than relying only on your API tier.
 
 Consistency in behavior is important for client retry logic.
 
-## 9. C#-Style Pseudocode (Service Layer)
-
-```csharp
-public async Task<IResult> CreatePaymentAsync(string tenantId, string key, PaymentRequest req)
-{
-    var reqHash = ComputeHash(req);
-
-    // 1) Atomic claim (unique key)
-    var claimed = await _idemRepo.TryInsertProcessingAsync(tenantId, key, reqHash);
-
-    if (!claimed)
-    {
-        var existing = await _idemRepo.GetAsync(tenantId, key);
-
-        if (existing.RequestHash != reqHash)
-            return Results.Conflict("Idempotency key reused with different payload.");
-
-        if (existing.Status == "completed")
-            return Results.Content(existing.ResponseBody, "application/json", existing.ResponseCode);
-
-        return Results.Accepted($"/payments/status/{key}");
-    }
-
-    try
-    {
-        var payment = await _paymentGateway.ChargeAsync(req);
-        var response = new { paymentId = payment.Id, status = "succeeded" };
-
-        await _idemRepo.MarkCompletedAsync(tenantId, key, 201, JsonSerializer.Serialize(response));
-        return Results.Created($"/payments/{payment.Id}", response);
-    }
-    catch (Exception ex)
-    {
-        // Store deterministic failure response if needed
-        await _idemRepo.MarkFailedAsync(tenantId, key, 500, "{\"error\":\"temporary failure\"}");
-        throw;
-    }
-}
-```
-
-## 10. Payment-Specific Notes
+## 9. Payment-Specific Notes
 
 For duplicate payment prevention in distributed systems, use both:
 - Internal idempotency (your API)
@@ -197,7 +157,7 @@ For duplicate payment prevention in distributed systems, use both:
 Also store a business operation id like `merchant_order_id` and enforce uniqueness at DB level.
 Even if retries bypass one layer, another layer still blocks duplicates.
 
-## 11. Common Mistakes
+## 10. Common Mistakes
 
 - Storing key only in process memory (fails in multi-instance deployments)
 - No unique index in shared DB
@@ -206,8 +166,9 @@ Even if retries bypass one layer, another layer still blocks duplicates.
 - Very short TTL that expires before delayed retries arrive
 - Treating transient failure as safe to re-execute without reconciliation
 
-## 12. Summary
+## 11. Summary
 
 Idempotency keys make `POST` operations retry-safe.
 In distributed systems, the core requirement is a **shared atomic store** with uniqueness and response replay.
 For payments, combine API-level idempotency + provider-level idempotency + DB uniqueness for strong protection against duplicate charges.
+
